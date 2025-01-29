@@ -487,8 +487,8 @@ c66ef7ebf393   host      host      local
 cbda113a7755   none      null      local
 b2e7a884475a   rednet    bridge    local
 ```
-3. Using ```docker inspect c1``` and ```docker inspect c2``` inscpect the two network. What is the gateway of bluenet and rednet.? ***(1 mark)*** __Gateway bluenet:172.18.0.1, Gateway rednet:172.19.0.1__.
-4. What is the network address for the running container c1 and c2? ***(1 mark)*** __c1 address:172.18.0.2, c2 address:172.19.0.2__.
+3. Using ```docker inspect c1``` and ```docker inspect c2``` inscpect the two network. What is the gateway of bluenet and rednet.? ***(1 mark)*** __Gateway bluenet: 172.18.0.1, Gateway rednet: 172.19.0.1__.
+4. What is the network address for the running container c1 and c2? ***(1 mark)*** __c1 address: 172.18.0.2, c2 address: 172.19.0.2__.
 5. Using the command ```docker exec c1 ping c2```, which basically tries to do a ping from container c1 to c2. Are you able to ping? Show your output . ***(1 mark)*** __Running docker exec c1 ping c2 will fail because containers on separate networks cannot ping each other unless connected to the same network or bridged.__.
 ```
 @yasminbtrsy ➜ ~/webpage $ docker exec c1 ping c2
@@ -505,8 +505,13 @@ docker exec c1 ping c2
 ```
 ***Questions:***
 
-1. Are you able to ping? Show your output . ***(1 mark)*** __Fill answer here__.
-2. What is different from the previous ping in the section above? ***(1 mark)*** __Fill answer here__.
+1. Are you able to ping? Show your output . ***(1 mark)*** __Yes__.
+```
+@yasminbtrsy ➜ ~/webpage $ docker exec c1 ping c2
+PING c2 (172.20.0.3): 56 data bytes
+64 bytes from 172.20.0.3: seq=0 ttl=64 time=0.130 ms
+```
+2. What is different from the previous ping in the section above? ***(1 mark)*** __Previous ping not working because the containers were on different network(bluenet, rednet). After connecting both containers to a common network(brigdenet), the ping then succeeds as it allow communication between c1 and c2__.
 
 ## Intermediate Level (10 marks bonus)
 
