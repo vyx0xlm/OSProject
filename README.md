@@ -5,7 +5,7 @@ Group Name: __Star__.
 Section: __5__. 
 
 Team Mates:
-1. _Nurul Alyaa binti Rosdi__ and __2225656__
+1. __Nurul Alyaa binti Rosdi__ and __2225656__
 2. __Yasmin Batrisyia binti Mazlan__ and __2221380__
 
 ## Rules
