@@ -477,10 +477,23 @@ docker run -itd --net rednet --name c2 busybox sh
 ***Questions:***
 
 1. Describe what is busybox and what is command switch **--name** is for? . ***(2 mark)*** __Busybox is a minimal Unix utility with basic tools used in containers, and the --name switch assigns a custom name to a container for easy reference__.
-2. Explore the network using the command ```docker network ls```, show the output of your terminal. ***(1 mark)*** __Fill answer here__.
-3. Using ```docker inspect c1``` and ```docker inspect c2``` inscpect the two network. What is the gateway of bluenet and rednet.? ***(1 mark)*** __Fill answer here__.
-4. What is the network address for the running container c1 and c2? ***(1 mark)*** __Fill answer here__.
-5. Using the command ```docker exec c1 ping c2```, which basically tries to do a ping from container c1 to c2. Are you able to ping? Show your output . ***(1 mark)*** __Fill answer here__.
+2. Explore the network using the command ```docker network ls```, show the output of your terminal. ***(1 mark)*** 
+```bash
+@yasminbtrsy ➜ ~/webpage $ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+86d370f41831   bluenet   bridge    local
+bcdbf273212b   bridge    bridge    local
+c66ef7ebf393   host      host      local
+cbda113a7755   none      null      local
+b2e7a884475a   rednet    bridge    local
+```
+3. Using ```docker inspect c1``` and ```docker inspect c2``` inscpect the two network. What is the gateway of bluenet and rednet.? ***(1 mark)*** __Gateway bluenet:172.18.0.1, Gateway rednet:172.19.0.1__.
+4. What is the network address for the running container c1 and c2? ***(1 mark)*** __c1 address:172.18.0.2, c2 address:172.19.0.2__.
+5. Using the command ```docker exec c1 ping c2```, which basically tries to do a ping from container c1 to c2. Are you able to ping? Show your output . ***(1 mark)*** __Running docker exec c1 ping c2 will fail because containers on separate networks cannot ping each other unless connected to the same network or bridged.__.
+```
+@yasminbtrsy ➜ ~/webpage $ docker exec c1 ping c2
+ping: bad address 'c2'
+```
 
 ## Bridging two SUB Networks
 1. Let's try this again by creating a network to bridge the two containers in the two subnetworks
