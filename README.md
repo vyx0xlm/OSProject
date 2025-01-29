@@ -661,8 +661,8 @@ You have now set up a Node.js application in a Docker container on nodejsnet net
 @yasminbtrsy ➜ ~/webpage $ curl http://localhost:3000/random
 curl: (7) Failed to connect to localhost port 3000: Connection refused
 ```
-2. Show the instruction needed to make this work. ***(1 mark)*** __Binf the Node.js application to all network interfaces(0.0.0.0) inside the container, allowing external access to the service__.
-
+2. Show the instruction needed to make this work. ***(1 mark)*** __Bind the Node.js application to all network interfaces(0.0.0.0) inside the container, allowing external access to the service__.
+__Instruction:__
 1. In the index.js file, change the app.listen() line to:
 ```js
 app.listen(port, '0.0.0.0', () => {
