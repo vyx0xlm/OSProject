@@ -460,9 +460,12 @@ docker run --detach -v /workspaces/OSProject/webpage:/usr/local/apache2/htdocs/ 
 
 ***Questions:***
 
-1. What is the permission of folder /usr/local/apache/htdocs and what user and group owns the folder? . ***(2 mark)*** __Fill answer here__.
-2. What port is the apache web server running. ***(1 mark)*** __Fill answer here__.
-3. What port is open for http protocol on the host machine? ***(1 mark)*** __Fill answer here__.
+1. What is the permission of folder /usr/local/apache/htdocs and what user and group owns the folder? . ***(2 mark)***
+__It has permissions drwxr-xr-x and is owned by the root user and root group__.
+2. What port is the apache web server running. ***(1 mark)***
+__Port 80__.
+3. What port is open for http protocol on the host machine? ***(1 mark)***
+__Port 8080__.
 
 ## Create SUB Networks
 
@@ -481,11 +484,25 @@ docker run -itd --net rednet --name c2 busybox sh
 ```
 ***Questions:***
 
-1. Describe what is busybox and what is command switch **--name** is for? . ***(2 mark)*** __Fill answer here__.
-2. Explore the network using the command ```docker network ls```, show the output of your terminal. ***(1 mark)*** __Fill answer here__.
-3. Using ```docker inspect c1``` and ```docker inspect c2``` inscpect the two network. What is the gateway of bluenet and rednet.? ***(1 mark)*** __Fill answer here__.
-4. What is the network address for the running container c1 and c2? ***(1 mark)*** __Fill answer here__.
-5. Using the command ```docker exec c1 ping c2```, which basically tries to do a ping from container c1 to c2. Are you able to ping? Show your output . ***(1 mark)*** __Fill answer here__.
+1. Describe what is busybox and what is command switch **--name** is for? . ***(2 mark)*** __Busybox is a minimal Unix utility with basic tools used in containers, and the --name switch assigns a custom name to a container for easy reference__.
+2. Explore the network using the command ```docker network ls```, show the output of your terminal. ***(1 mark)*** __The output:__
+```bash
+@yasminbtrsy ➜ ~/webpage $ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+86d370f41831   bluenet   bridge    local
+bcdbf273212b   bridge    bridge    local
+c66ef7ebf393   host      host      local
+cbda113a7755   none      null      local
+b2e7a884475a   rednet    bridge    local
+```
+3. Using ```docker inspect c1``` and ```docker inspect c2``` inscpect the two network. What is the gateway of bluenet and rednet.? ***(1 mark)*** __Gateway bluenet: 172.18.0.1, Gateway rednet: 172.19.0.1__.
+4. What is the network address for the running container c1 and c2? ***(1 mark)*** __c1 address: 172.18.0.2, c2 address: 172.19.0.2__.
+5. Using the command ```docker exec c1 ping c2```, which basically tries to do a ping from container c1 to c2. Are you able to ping? Show your output . ***(1 mark)*** __Running docker exec c1 ping c2 will fail because containers on separate networks cannot ping each other unless connected to the same network or bridged.__.
+__The output:__
+```
+@yasminbtrsy ➜ ~/webpage $ docker exec c1 ping c2
+ping: bad address 'c2'
+```
 
 ## Bridging two SUB Networks
 1. Let's try this again by creating a network to bridge the two containers in the two subnetworks
@@ -497,8 +514,14 @@ docker exec c1 ping c2
 ```
 ***Questions:***
 
-1. Are you able to ping? Show your output . ***(1 mark)*** __Fill answer here__.
-2. What is different from the previous ping in the section above? ***(1 mark)*** __Fill answer here__.
+1. Are you able to ping? Show your output . ***(1 mark)*** __Yes__.
+__The output:__
+```
+@yasminbtrsy ➜ ~/webpage $ docker exec c1 ping c2
+PING c2 (172.20.0.3): 56 data bytes
+64 bytes from 172.20.0.3: seq=0 ttl=64 time=0.130 ms
+```
+2. What is different from the previous ping in the section above? ***(1 mark)*** __Previous ping not working because the containers were on different network(bluenet, rednet). After connecting both containers to a common network(brigdenet), the ping then succeeds as it allow communication between c1 and c2__.
 
 ## Intermediate Level (10 marks bonus)
 
@@ -641,10 +664,41 @@ You have now set up a Node.js application in a Docker container on nodejsnet net
 
 ***Questions:***
 
-1. What is the output of step 5 above, explain the error? ***(1 mark)*** __Fill answer here__.
-2. Show the instruction needed to make this work. ***(1 mark)*** __Fill answer here__.
+1. What is the output of step 5 above, explain the error? ***(1 mark)*** __The output:__.
+```
+@yasminbtrsy ➜ ~/webpage $ curl http://localhost:3000/random
+curl: (7) Failed to connect to localhost port 3000: Connection refused
+```
+2. Show the instruction needed to make this work. ***(1 mark)*** __Bind the Node.js application to all network interfaces(0.0.0.0) inside the container, allowing external access to the service__.
 
+__Instruction:__
+1. In the index.js file, change the app.listen() line to:
+```js
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+```
 
+2. Rebuild the Node.js Docker image:
+```bash
+docker build -t nodejs-app .
+```
+
+3. Stop and remove the existing Node.js container if it's running:
+```bash
+docker stop nodejs-container
+docker rm nodejs-container
+```
+
+4. Run the Node.js container again, making sure it's connected to the correct network:
+```bash
+docker run --name nodejs-container --network nodejsnet -p 3000:3000 -d nodejs-app
+```
+
+5. Test the setup again:
+```bash
+curl http://localhost:3000/random
+```
 
 ## What to submit
 
