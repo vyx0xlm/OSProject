@@ -435,7 +435,6 @@ __Yes, we change the files permission in the myroot directory.__
 total 4
 -rw-r--r-- 1 root root 13 Jan 30 01:28 helloworld.txt
 ```
-*** __Fill answer here__.***
 
 ## You are on your own, create your own static webpage
 
